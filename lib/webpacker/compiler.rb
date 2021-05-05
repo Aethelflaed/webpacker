@@ -68,7 +68,11 @@ class Webpacker::Compiler
     def optionalRubyRunner
       bin_webpack_path = config.root_path.join("bin/webpack")
       first_line = File.readlines(bin_webpack_path).first.chomp
-      /ruby/.match?(first_line) ? RbConfig.ruby : ""
+      if first_line =~ /ruby/
+        RbConfig.ruby
+      else
+        ''
+      end
     end
 
     def run_webpack
@@ -111,7 +115,10 @@ class Webpacker::Compiler
     def webpack_env
       return env unless defined?(ActionController::Base)
 
-      env.merge("WEBPACKER_ASSET_HOST"        => ENV.fetch("WEBPACKER_ASSET_HOST", ActionController::Base.helpers.compute_asset_host),
+      # TODO WEBPACKER_ASSET_HOST default value
+      # uses ActionController::Base.helpers.compute_asset_host in upstream,
+      # which is not available for rails 3
+      env.merge("WEBPACKER_ASSET_HOST"        => ENV.fetch("WEBPACKER_ASSET_HOST", Rails.application.config.action_controller.asset_host),
                 "WEBPACKER_RELATIVE_URL_ROOT" => ENV.fetch("WEBPACKER_RELATIVE_URL_ROOT", ActionController::Base.relative_url_root),
                 "WEBPACKER_CONFIG" => webpacker.config_path.to_s)
     end
