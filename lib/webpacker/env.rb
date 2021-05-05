@@ -18,7 +18,7 @@ class Webpacker::Env
 
   private
     def current
-      Rails.env.presence_in(available_environments)
+      Rails.env.in?(available_environments) ? Rails.env : nil
     end
 
     def fallback_env_warning
