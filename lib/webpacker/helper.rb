@@ -17,15 +17,8 @@ module Webpacker::Helper
     path_to_asset(current_webpacker_instance.manifest.lookup!(name), options)
   end
 
-  # Computes the absolute path for a given Webpacker asset.
-  # Returns the absolute path using manifest.json and passes it to url_to_asset helper.
-  # This will use url_to_asset internally, so most of their behaviors will be the same.
-  #
-  # Example:
-  #
-  #   <%= asset_pack_url 'calendar.css' %> # => "http://example.com/packs/calendar-1016838bab065ae1e122.css"
-  def asset_pack_url(name, **options)
-    url_to_asset(current_webpacker_instance.manifest.lookup!(name), options)
+  def path_to_asset(path, **options)
+    asset_paths.compute_public_path(path, nil, options)
   end
 
   # Computes the relative path for a given Webpacker image with the same automated processing as image_pack_tag.
@@ -33,14 +26,6 @@ module Webpacker::Helper
   # This will use path_to_asset internally, so most of their behaviors will be the same.
   def image_pack_path(name, **options)
     resolve_path_to_image(name, **options)
-  end
-
-  # Computes the absolute path for a given Webpacker image with the same automated
-  # processing as image_pack_tag. Returns the relative path using manifest.json
-  # and passes it to path_to_asset helper. This will use path_to_asset internally,
-  # so most of their behaviors will be the same.
-  def image_pack_url(name, **options)
-    resolve_path_to_image(name, **options.merge(protocol: :request))
   end
 
   # Creates an image tag that references the named pack file.

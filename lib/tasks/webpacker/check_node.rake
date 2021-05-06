@@ -1,3 +1,4 @@
+require 'json'
 require "semantic_range"
 namespace :webpacker do
   desc "Verifies if Node.js is installed"
